@@ -1,0 +1,74 @@
+:root {
+  --nav-bg: #0F1D31;
+  --link-color: #457B9D;
+  --font: 'Inter';
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  padding: 1rem 2rem; 
+  background: var(--nav-bg);
+}
+
+.logo-link {
+  display: flex;
+  align-items: center; 
+}
+
+.nav-logo {
+  height: 32px; 
+  width: auto; 
+  margin-right: 30rem; 
+  transition: transform 0.1s ease-in-out;
+  transform-origin: center center;
+}
+.logo-link:hover .nav-logo{
+    transform: scale(1.05);
+}
+
+.navbar-text {
+  font-family: var(--font);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  margin: 0 1rem; 
+}
+
+nav ul a {
+  position: relative;
+  font-family: var(--font);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--link-color);
+  text-decoration: none;
+  padding-bottom: 6px;
+}
+
+nav ul a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 21px;
+  height: 1px;
+  background: var(--link-color);
+  border-radius: 3.5px;
+  transition: width 0.2s ease;
+}
+
+nav ul a:hover::after,
+nav ul a.active::after {
+  width: 100%; 
+}
+

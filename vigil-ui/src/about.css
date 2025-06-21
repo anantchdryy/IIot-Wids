@@ -1,0 +1,46 @@
+.about-page {
+  padding: 2rem 5%;
+  color: #A5BAC7;
+  background: #0F1D31; 
+  line-height: 1.6;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.about-title {
+  font-size: 2rem;
+  font-weight: 300;
+  color: #6faed9;
+  margin-bottom: 1.5rem;
+}
+
+.about-intro {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.features-heading {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #6faed9;
+  margin-bottom: 1rem;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+}
+
+.features-list li {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.features-list li::before {
+  content: '–';
+  position: absolute;
+  left: 0;
+  color: #457B9D;
+  font-weight: bold;
+}

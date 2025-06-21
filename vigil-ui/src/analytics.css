@@ -1,0 +1,130 @@
+.analytics-page {
+  max-width: 1000px;               
+  margin: 0 auto;                  
+  padding: 2rem 1rem;              
+  background: #0F1D31;
+  min-height: calc(100vh - 64px);  
+  color: #A5BAC7;
+}
+
+.analytics-title {
+  font-size: 2rem;
+  color: #6faed9;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.analytics-subtitle {
+  font-size: 1.2rem;
+  color: #A5BAC7;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.anomaly-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;                       
+}
+
+.anomaly-card {
+  display: flex;
+  background: #1F2A3A;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  gap: 2rem;
+}
+
+.card-left,
+.card-right {
+  flex: 1;
+}
+
+.card-left p,
+.card-right p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  color: #A5BAC7;
+}
+
+.card-left p strong,
+.card-right p strong {
+  color: #6faed9;
+}
+
+.anomaly-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 300px;           
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+
+.anomaly-list.expanded {
+  max-height: 2500px;          
+}
+
+
+.anomaly-card {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s;
+}
+
+
+.anomaly-list.expanded .anomaly-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+.toggle-icon-button {
+  display: block;
+  margin: 1.5rem auto 0;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+.toggle-icon-button.expanded {
+  transform: rotate(180deg);
+}
+
+.toggle-icon-circle {
+  fill: none;
+  stroke: #1F2A3A;
+  stroke-width: 2;
+  transition: stroke 0.2s;
+}
+.toggle-icon-button:hover .toggle-icon-circle {
+  stroke: #8fc1e3;
+}
+
+.toggle-icon-chevron {
+  fill: none;
+  stroke: #324157;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.anomaly-card {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s;
+}
+
+
+.anomaly-list:not(.expanded) .anomaly-card {
+  opacity: 1;
+  transform: translateY(0);
+  transition: none;   
+}
+
+
+.anomaly-list.expanded .anomaly-card {
+  opacity: 1;
+  transform: translateY(0);
+}
