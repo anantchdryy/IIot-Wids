@@ -4,12 +4,13 @@ import joblib
 import numpy as np
 from pymongo import MongoClient
 from feature_extraction import extract_features_full, PROTOCOL_CATEGORIES, FLAGS_CATEGORIES
+import os
 
-# ───── CONFIG ─────────────────────────────────────────────────
 PCAP_FILE        = "temp.pcap"
 MODEL_FILE       = "family_detectors.pkl"
-CAPTURE_DURATION = 5  
+CAPTURE_DURATION = 3600  
 DEFAULT_INTERFACE = '5'
+DEVICE_FILTER = "host 192.168.1.44"
 
 # MongoDB connection
 user      = "anant"
@@ -23,7 +24,19 @@ COLLECTION = "predictions"
 
 # Full path to tshark.exe on your Windows box
 TSHARK_CMD = r"C:\Program Files\Wireshark\tshark.exe"
-# ────────────────────────────────────────────────────────────────
+
+def wait_for_flush(path, tries=6, pause=2):
+    last = -1
+    for _ in range(tries):
+        try:
+            sz= os.path.getsize(path)
+            if sz == last and sz>0:
+                return True
+            last = sz
+        except FileNotFoundError:
+            pass
+        time.sleep(pause)
+    return False
 
 def list_interfaces():
     """Print available capture interfaces so you can pick one."""
@@ -33,11 +46,12 @@ def list_interfaces():
     )
     print("Available interfaces:\n", res.stdout)
 
-def capture_pcap(interface, duration=CAPTURE_DURATION, output=PCAP_FILE):
+def capture_pcap(interface, duration=CAPTURE_DURATION, output=PCAP_FILE, bpf=DEVICE_FILTER):
     """Capture `duration` seconds of traffic into `output`."""
     cmd = [
         TSHARK_CMD,
         "-i", interface,
+        "-f", bpf,
         "-a", f"duration:{duration}",
         "-w", output
     ]
@@ -87,7 +101,10 @@ def main():
     try:
         while True:
             # a) capture a short PCAP
-            capture_pcap(interface)
+            capture_pcap(interface, duration=CAPTURE_DURATION)
+            if not wait_for_flush(PCAP_FILE):
+                print("[!] PCAP still unstable or empty — skipping this cycle.")
+                continue
 
             # b) extract features
             feats = extract_features_full(PCAP_FILE)
