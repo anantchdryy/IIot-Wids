@@ -3,13 +3,14 @@ from flask_cors import CORS
 from pymongo import MongoClient
 import subprocess, os, signal
 import certifi
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 CORS(app)
-
-MONGO_URI  = "mongodb+srv://anant:Anantislive1@wids.hroqzag.mongodb.net/wids?retryWrites=true&w=majority"
-DB_NAME    = "wids"
-COL_PRED   = "predictions"
+load_dotenv()
+MONGO_URI = os.getenv("MONGO_URI")
+DB_NAME= os.getenv('DB_NAME')
+COL_PRED = os.getenv('COLLECTION')
 SCRIPT     = os.path.abspath("live_predictor.py")
 
 client = MongoClient(MONGO_URI,tls = True, tlsCAFile=certifi.where())
@@ -48,14 +49,14 @@ def latest():
       'probabilities': doc['probabilities']
     })
 
-@app.route('/api/anomalies', methods=['GET'])
+@app.route('/api/anomalies', methods=['GET']) 
 def anomalies():
     print("[DEBUG] /api/anomalies called")
     docs = list(col_anomalies.find().sort('timestamp', -1))
     print(f"[DEBUG] found {len(docs)} anomaly docs")
     for d in docs:
         d['_id'] = str(d['_id'])
-    return jsonify(docs)
+    return jsonify(docs) 
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(port=5000, debug=True) #Run the app locally on the port 5000
