@@ -8,14 +8,12 @@ export default function GoButton({ isRunning, text, onClick }) {
       onClick={onClick}
     >
       <svg width="266" height="266" viewBox="0 0 266 266">
-        {/* Base border */}
         <circle
           cx="133"
           cy="133"
           r="130"
           className="go-circle-base"
         />
-        {/* Animated dash */}
         <circle
           cx="133"
           cy="133"
