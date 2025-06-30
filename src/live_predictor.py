@@ -5,6 +5,7 @@ import numpy as np
 from pymongo import MongoClient
 from feature_extraction import extract_features_full, PROTOCOL_CATEGORIES, FLAGS_CATEGORIES
 import os
+from dotenv import load_dotenv
 
 PCAP_FILE        = "temp.pcap"
 MODEL_FILE       = "family_detectors.pkl"
@@ -13,16 +14,14 @@ DEFAULT_INTERFACE = '5'
 DEVICE_FILTER = "host 192.168.1.44"
 
 # MongoDB connection
-user      = "anant"
-pw        = "Anantislive1"
-MONGO_URI = (
-    f"mongodb+srv://{user}:{pw}"
-    "@wids.hroqzag.mongodb.net/wids?retryWrites=true&w=majority"
-)
-DB_NAME    = "wids"
-COLLECTION = "predictions"
+load_dotenv()
+user = os.getenv('user')
+pw = os.getenv('pw')
+MONGO_URI = os.getenv("MONGO_URI")
+DB_NAME= os.getenv('DB_NAME')
+COLLECTION = os.getenv('COLLECTION')
 
-# Full path to tshark.exe on your Windows box
+# Full path to tshark.exe 
 TSHARK_CMD = r"C:\Program Files\Wireshark\tshark.exe"
 
 def wait_for_flush(path, tries=6, pause=2):
@@ -77,43 +76,43 @@ def predict(features, model_dict):
     probs = {}
     for family, clf in model_dict.items():
         p = clf.predict_proba(arr)[0]
-        # find index of the “positive” class (1)
+        
         pos_idx = list(clf.classes_).index(1)
         probs[family] = float(p[pos_idx])
-    # pick the family with the highest proba
+    
     best = max(probs, key=probs.get)
     return best, probs
 
 def main():
-    # 1) let user pick the capture interface
+    
     interface = DEFAULT_INTERFACE
     print(f"[+] Using default interface {interface}")
 
-    # 2) connect to MongoDB
+   
     client = MongoClient(MONGO_URI)
     col    = client[DB_NAME][COLLECTION]
     anomalies_col = client[DB_NAME]["anomalies"]
 
-    # 3) load your family‐detectors dict
+    
     model_dict = load_model()
 
     print("[*] Starting live capture & prediction loop. Ctrl-C to stop.")
     try:
         while True:
-            # a) capture a short PCAP
+            
             capture_pcap(interface, duration=CAPTURE_DURATION)
             if not wait_for_flush(PCAP_FILE):
                 print("[!] PCAP still unstable or empty — skipping this cycle.")
                 continue
 
-            # b) extract features
+
             feats = extract_features_full(PCAP_FILE)
 
-            # c) predict across all families
+            
             label, probs = predict(feats, model_dict)
             risk_score   = probs[label]
 
-            # d) insert into Mongo
+            
             record = {
                 "timestamp":    time.strftime("%Y-%m-%d %H:%M:%S"),
                 "interface":    interface,
@@ -149,7 +148,7 @@ def main():
                 anomalies_col.insert_one(anomaly_record)
                 print(f"[!] Anomaly! stored: {anomaly_record}")
 
-            # e) optional pause
+          
             time.sleep(1)
 
     except KeyboardInterrupt:
