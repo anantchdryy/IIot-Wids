@@ -1,143 +1,114 @@
-IIoT WIDS
-A Wireless Intrusion Detection System for Industrial IoT networks
+IIoT-WIDS
+Wireless Intrusion Detection System for Industrial IoT Networks
 Live packet capture → feature extraction → ML prediction → React dashboard
 
-🚀 Features
-Live packet capture using tshark or custom Python scripts
+Features
 
-Feature extraction pipeline in Python
+Live packet capture using TShark or custom Python scripts
 
-Real-time anomaly prediction with a pretrained XGBoost model
+Modular feature extraction pipeline in Python
 
-Flask REST API endpoints (/api/start, /api/stop, /api/latest)
+Real-time anomaly classification with a pretrained XGBoost model
 
-React + CSS frontend for live visualization
+Flask-based REST API (/api/start, /api/stop, /api/latest)
 
-📁 Repository Structure
-csharp
-Copy
-Edit
-IIot-Wids/
+React frontend with live anomaly visualization
+
+Repository Structure
+
+IIoT-WIDS/
 ├── README.md
 ├── .gitignore
 ├── requirements.txt
-├── src/                     # Python backend
-│   ├── app.py               # Flask API
-│   ├── live_predictor.py    # capture & prediction loop
-│   ├── feature_extraction.py
-│   └── packets.py
-├── notebooks/               # Jupyter notebooks
-│   └── WIDS_new_model.ipynb
-└── ui/                      # React frontend
-    ├── package.json
-    ├── package-lock.json
-    └── src/
-        ├── index.js
-        ├── App.js
-        ├── home.css
-        └── …
-⚙️ Prerequisites
+├── src/ (Python backend)
+│ ├── app.py (Flask API)
+│ ├── live_predictor.py (Capture loop + ML inference)
+│ ├── feature_extraction.py
+│ └── packets.py
+├── notebooks/
+│ └── WIDS_new_model.ipynb (Model training and eval)
+└── ui/ (React frontend)
+├── package.json
+├── package-lock.json
+└── src/
+├── index.js
+├── App.js
+├── home.css
+└── ...
+
+Requirements
+
 Python 3.8+
 
-Node.js 14+ & npm
+Node.js 14+ and npm
 
 MongoDB (Atlas or local)
 
-Wireshark/tshark installed and on your PATH
+Wireshark with tshark in PATH
 
-(Optional) Git for version control
+(Optional) Git
 
-🔧 Installation
+Setup
+
 Clone the repo
-
-bash
-Copy
-Edit
 git clone https://github.com/anantchdryy/IIot-Wids.git
 cd IIot-Wids
-Backend setup
 
-bash
-Copy
-Edit
+Backend (Python)
 python3 -m venv venv
-# macOS/Linux
-source venv/bin/activate
-# Windows PowerShell
-.\venv\Scripts\Activate
+
+Activate virtual environment:
+
+macOS/Linux: source venv/bin/activate
+
+Windows: .\venv\Scripts\Activate
+
+Install dependencies:
 pip install --upgrade pip
 pip install -r requirements.txt
-Frontend setup
 
-bash
-Copy
-Edit
+Frontend (React)
 cd ui
 npm install
 cd ..
-🔑 Configuration
-Copy or create a .env file in the root with:
 
-ini
-Copy
-Edit
-MONGO_URI="mongodb+srv://<user>:<pass>@<cluster>.mongodb.net/wids?retryWrites=true&w=majority"
-DB_NAME="wids"
-To adjust anomaly thresholds, edit src/thresholds.json.
+Configuration
+Create a .env file in the root directory with the following:
 
-🎬 Usage
-Start the Flask API
+MONGO_URI=mongodb+srv://<user>:<password>@<cluster>.mongodb.net/wids?retryWrites=true&w=majority
+MONGO_DB=wids
+MONGO_COLLECTION=predictions
 
-bash
-Copy
-Edit
-cd IIot-Wids
-source venv/bin/activate       # or Activate on Windows
+To modify anomaly detection thresholds, edit src/thresholds.json
+
+Usage
+
+Start Flask API
+source venv/bin/activate (or activate for Windows)
 python src/app.py
-The API will run at http://localhost:5000.
+Flask API will run at http://localhost:5000
 
-Launch the live predictor
-(in a new terminal, with venv active)
-
-bash
-Copy
-Edit
+Start Packet Capture & Prediction (in separate terminal with venv activated)
 python src/live_predictor.py
-Run the React dashboard
 
-bash
-Copy
-Edit
+Launch Frontend
 cd ui
 npm start
-Open http://localhost:3000 in your browser.
+Visit http://localhost:3000 in your browser
 
-📊 Jupyter Notebooks
-Model exploration & training lives in notebooks/WIDS_new_model.ipynb.
-Start it with:
-
-nginx
-Copy
-Edit
+Jupyter Notebooks
+Model training notebook:
+notebooks/WIDS_new_model.ipynb
+Run using:
 jupyter lab notebooks/WIDS_new_model.ipynb
-🤝 Contributing
-Fork this repo
 
-Create a feature branch:
-
-bash
-Copy
-Edit
+Contributing
 git checkout -b feature/your-feature
-Commit your changes & push:
-
-sql
-Copy
-Edit
 git add .
 git commit -m "feat: description"
 git push origin feature/your-feature
-Open a Pull Request against main
+Open a Pull Request to main
 
-📄 License
-This project is licensed under the MIT License.
+License
+MIT License
+
